@@ -7,8 +7,14 @@ const userSchema = new Schema({
   spotifyId: String,
   photos: [String],
   emails: [{}],
-  odesLiked: [{}],
-  odesCreated: [{}]
+  odesLiked: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Ode'
+  }],
+  odesCreated: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Ode'
+  }]
 }, {
   timestamps: {
     createdAt: 'created_at',
