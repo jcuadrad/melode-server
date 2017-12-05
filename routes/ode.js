@@ -3,7 +3,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.post('/', function (req, res, next) {
-  res.send('posting ode');
+  const userOde = req.body;
+  res.json('OK!');
 });
 
 router.get('/random', function (req, res, next) {
