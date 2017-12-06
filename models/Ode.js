@@ -22,7 +22,8 @@ const odeSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'User'
-  }
+  },
+  isEmpty: Boolean
 }, {
   timestamps: {
     createdAt: 'created_at',
