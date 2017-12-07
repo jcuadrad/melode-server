@@ -1,13 +1,13 @@
-var GeniusApi = require('genius-api');
+const GeniusApi = require('genius-api');
+const dotenv = require('dotenv');
 
-// API Service Key
-var keys = require('../keys');
+dotenv.config();
 
 // Import Helper Functions
-var helperFunction = require('../helpers/functions');
+const helperFunction = require('../helpers/functions');
 
 // New Genius Instance with Keys
-var genius = new GeniusApi(keys.GENIUS_CLIENT_ACCESS_TOKEN);
+const genius = new GeniusApi(process.env.GENIUS_CLIENT_ACCESS_TOKEN);
 
 function search (geniusQuery) {
   // Genius Song Search
@@ -17,15 +17,15 @@ function search (geniusQuery) {
         let geniusSongId = geniusSearchRes.hits[0].result.id;
         // Genius Get Annotation
         return genius.song(geniusSongId).then((geniusRes) => {
-          var annotation = helperFunction.getAnnotation(geniusRes.song.description.dom.children[0].children);
-          var data = {
+          const annotation = helperFunction.getAnnotation(geniusRes.song.description.dom.children[0].children);
+          const data = {
             annotation: annotation
           };
           console.log('GENIUS RESULT:', data);
           return data;
         });
       } else {
-        // var dataEmpty = {};
+        // const dataEmpty = {};
         console.log('Nothing in Genius!');
         // return dataEmpty;
       }

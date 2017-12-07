@@ -1,10 +1,10 @@
-var axios = require('axios');
+const axios = require('axios');
+const dotenv = require('dotenv');
 
-// API Service Key
-var keys = require('../keys');
+dotenv.config();
 
 // // API Service Info
-const musixmatchApiKey = keys.MUSIXMATH_API_KEY;
+const musixmatchApiKey = process.env.MUSIXMATCH_API_KEY;
 const musixmatchBaseUrl = 'https://api.musixmatch.com/ws/1.1/';
 
 function search (stringArtist, stringSongName) {
@@ -12,16 +12,16 @@ function search (stringArtist, stringSongName) {
   return axios.get(musixmatchBaseUrl + 'matcher.lyrics.get?q_track=' + stringSongName + '&q_artist=' + stringArtist + '&apikey=' + musixmatchApiKey)
     .then(function (mxmRes) {
       if (mxmRes.data.message.body.length !== 0) {
-        var lyrics = mxmRes.data.message.body.lyrics.lyrics_body.split('\n');
-        var fullLink = mxmRes.data.message.body.lyrics.backlink_url;
-        var data = {
+        const lyrics = mxmRes.data.message.body.lyrics.lyrics_body.split('\n');
+        const fullLink = mxmRes.data.message.body.lyrics.backlink_url;
+        const data = {
           lyrics: lyrics,
           fullLink: fullLink
         };
         console.log('MUSIXMATCH RESULT:', data);
         return data;
       } else {
-        // var dataEmpty = {};
+        // const dataEmpty = {};
         console.log('Nothing in Musixmatch!');
         // return dataEmpty;
       }
