@@ -5,7 +5,10 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
+
+const passportConfiguration = require('./helpers/passportConfig');
 
 const ode = require('./routes/ode');
 const user = require('./routes/user');
@@ -16,6 +19,10 @@ const dotenv = require('dotenv');
 const app = express();
 
 dotenv.config();
+
+passportConfiguration();
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Connect mongoose database
 mongoose.Promise = Promise;

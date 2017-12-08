@@ -22,8 +22,10 @@
     "mongoose": "^4.13.6",
     "morgan": "~1.9.0",
     "node-spotify-api": "^1.0.7",
+    "passport": "^0.4.0",
+    "passport-spotify": "^0.3.1",
     "serve-favicon": "~2.4.5"
-  },   
+  },
   "engines": {
     "node": "9.2.0",
     "npm": "5.5.1"
