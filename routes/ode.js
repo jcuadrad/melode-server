@@ -60,8 +60,19 @@ router.post('/', function (req, res, next) {
     });
 });
 
-router.get('/random', function (req, res, next) {
-  res.send('random ode');
+router.post('/random', function (req, res, next) {
+  let filter = req.body;
+
+  Ode.random(10, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json(err);
+    } else {
+      let newResults = filter.excludeIds.filter(val => !result.includes(val));
+      console.log(newResults);
+      res.status(200).json(result);
+    }
+  });
 });
 
 router.get('/:id', function (req, res, next) {

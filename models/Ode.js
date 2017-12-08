@@ -31,6 +31,21 @@ const odeSchema = new Schema({
   }
 });
 
+odeSchema.statics.random = function (itemCount, cb) {
+  this.aggregate([{
+    $sample: { size: 100 }
+  }, {
+    $group: {
+      _id: '$_id',
+      document: { $push: '$$ROOT' }
+    }
+  }, {
+    $limit: itemCount
+  }, {
+    $unwind: '$document'
+  }], cb);
+};
+
 const Ode = mongoose.model('Ode', odeSchema);
 
 module.exports = {Ode: Ode};
