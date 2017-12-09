@@ -1,6 +1,10 @@
 var express = require('express');
 const passport = require('passport');
 var router = express.Router();
+const dotenv = require('dotenv');
+var urlencode = require('urlencode');
+
+dotenv.config();
 
 /* GET home page. */
 // router.get('/spotify/start', passport.authenticate('spotify', 
@@ -9,18 +13,23 @@ var router = express.Router();
 //   res.json({redirectUrl: something })
 // });
 
-router.get('/spotify/start', (req, res) => {    
-  // const params = [];
+router.get('/spotify/start', (req, res) => { 
+  const baseUrl = 'https://accounts.spotify.com/authorize/';
+  const spotifyKey = process.env.SPOTIFY_KEY_ID;
+  const redirectUri = urlencode(process.env.SPOTIFY_REDIRECT_URI);
+  const scope = urlencode('user-read-email user-read-private playlist-modify-public playlist-modify-private');
 
+  const SpotifyUrl = baseUrl + '?client_id=' + spotifyKey + '&redirect_uri=' + redirectUri + '&scope=' + scope + '&response_type=token';
+  
   // url = baseUrl + ? + params.map(item => urlencode(item)).join('&)'
 
-  const SpotifyUrl = 'https://accounts.spotify.com/authorize/?client_id=6bbca00628304a9ab4c67be40eda0dd0&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fspotify%2Fcallback%2F&scope=user-read-private%20user-read-email&response_type=token';
+  // const SpotifyUrl = 'https://accounts.spotify.com/authorize/?client_id=6bbca00628304a9ab4c67be40eda0dd0&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fspotify%2Fcallback%2F&scope=user-read-private%20user-read-email&response_type=token';
  
   res.status(200).json({ url: SpotifyUrl });
 });
 
 router.get('/spotify/callback', passport.authenticate('spotify', { failureRedirect: 'http://localhost:4200/login?retry' }), (req, res) => {
-  res.redirect('http://localhost:4200/share');
+  res.redirect(process.env.CALLBACK_REDIRECT);
 });
 
 router.get('/logout', function (req, res, next) {
