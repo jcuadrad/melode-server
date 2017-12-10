@@ -4,6 +4,8 @@ var router = express.Router();
 const dotenv = require('dotenv');
 var urlencode = require('urlencode');
 
+const User = require('../../models/User').User;
+
 dotenv.config();
 
 /* GET home page. */
@@ -29,11 +31,24 @@ router.get('/spotify/start', (req, res) => {
 });
 
 router.get('/spotify/callback', passport.authenticate('spotify', { failureRedirect: 'http://localhost:4200/login?retry' }), (req, res) => {
-  res.redirect(process.env.CALLBACK_REDIRECT);
+  console.log(req.user.id);
+  // res.append('user', req.user.id);
+  res.redirect(process.env.CALLBACK_REDIRECT + '?id=' + req.user.id + '&a=c');
 });
 
 router.get('/logout', function (req, res, next) {
   res.send('logout');
+});
+
+router.get('/me/:id', (req, res, next) => {
+  let userId = req.params;
+  console.log(userId);
+  User.findById(userId.id, (err, user) => {
+    if (err) {
+      next(err);
+    }
+    res.json({ user: user });
+  });
 });
 
 module.exports = router;

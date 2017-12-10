@@ -6,7 +6,10 @@ const userSchema = new Schema({
   username: String,
   spotifyId: String,
   photos: [String],
-  emails: [{}],
+  emails: [{
+    value: String,
+    type: String
+  }],
   odesLiked: [{
     type: Schema.Types.ObjectId,
     ref: 'Ode'

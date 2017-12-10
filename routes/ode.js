@@ -1,4 +1,5 @@
 var express = require('express');
+const passport = require('passport');
 var router = express.Router();
 
 // Model Import
@@ -18,11 +19,11 @@ router.post('/', function (req, res, next) {
   const userOde = req.body;
 
   // Sanitize information to call clients
-  const stringSongName = helperFunction.sanitize(userOde.songName);
-  const stringArtist = helperFunction.sanitize(userOde.artist);
+  const stringSongName = helperFunction.sanitize(userOde.snippet.songName);
+  const stringArtist = helperFunction.sanitize(userOde.snippet.artist);
 
   // Genius Prep to get Annotation
-  const geniusQuery = helperFunction.sanitizeGenius(userOde.songName, userOde.artist);
+  const geniusQuery = helperFunction.sanitizeGenius(userOde.snippet.songName, userOde.snippet.artist);
 
   // Query API's
   const spotifyPromise = spotify.search(stringArtist, stringSongName);
@@ -37,9 +38,10 @@ router.post('/', function (req, res, next) {
       const geniusRes = results[2];
       // Create new Ode Object
       var newOde = new Ode({
-        snippet: userOde.snippet,
-        songName: userOde.songName,
-        artist: userOde.artist,
+        owner: userOde.ownerId,
+        snippet: userOde.snippet.snippet,
+        songName: userOde.snippet.songName,
+        artist: userOde.snippet.artist,
         spotify: spotifyRes,
         musixmatch: musixMatchRes,
         genius: geniusRes,
@@ -76,7 +78,13 @@ router.post('/random', function (req, res, next) {
 });
 
 router.get('/:id', function (req, res, next) {
-  res.send('this specific ode');
+  let odeId = req.params.id;
+  Ode.findById(odeId, (err, ode) => {
+    if (err) {
+      next(err);
+    }
+    res.json({ ode: ode });
+  });
 });
 
 router.post('/by-id', function (req, res, next) {
