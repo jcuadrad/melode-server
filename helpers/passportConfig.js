@@ -9,6 +9,7 @@ function passportConfig () {
   });
 
   passport.deserializeUser(function (obj, done) {
+    obj = obj ? new User(obj) : null;
     done(null, obj);
   });
 
