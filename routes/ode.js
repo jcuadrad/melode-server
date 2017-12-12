@@ -4,6 +4,7 @@ var router = express.Router();
 
 // Model Import
 var Ode = require('../models/Ode').Ode;
+var User = require('../models/User').User;
 
 // Import Helper Functions
 var helperFunction = require('../helpers/functions');
@@ -67,13 +68,32 @@ router.post('/random', function (req, res, next) {
 
   Ode.random(10, (err, result) => {
     if (err) {
-      console.log(err);
       res.status(500).json(err);
     } else {
       let newResults = filter.excludeIds.filter(val => !result.includes(val));
       console.log(newResults);
       res.status(200).json(result);
     }
+  });
+});
+
+router.get('/:userId/owned', (req, res, next) => {
+  let userId = req.params.userId;
+  Ode.find({ owner: userId }, (err, odes) => {
+    if (err) {
+      res.status(500).json(err);
+    }
+    res.status(200).json({myOdes: odes});
+  });
+});
+
+router.get('/:userId/liked', (req, res, next) => {
+  let userId = req.params.userId;
+  User.findById(userId).populate('odesLiked').exec((err, user) => {
+    if (err) {
+      return next(err);
+    }
+    res.json({user: user});
   });
 });
 

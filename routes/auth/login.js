@@ -6,6 +6,7 @@ var urlencode = require('urlencode');
 
 const response = require('../../helpers/response');
 const User = require('../../models/User').User;
+const Ode = require('../../models/Ode').Ode;
 
 dotenv.config();
 
@@ -57,6 +58,43 @@ router.get('/me', (req, res) => {
     return response.data(req, res, req.user);
   }
   return response.notFound(req, res);
+});
+
+router.post('/:id/ode', (req, res, next) => {
+  let userId = { _id: req.params.id };
+  let odeId = { $push: { odesLiked: req.body.id }
+  };
+  User.findById(req.params.id, (err, user) => {
+    if (err) {
+      response.notFound(req, res);
+    }
+    if (!user) {
+      res.status(400).send({ message: 'User not found' });
+    } else {
+      if (user.odesLiked.indexOf(req.body.id) === -1) {
+        Ode.findById(req.body.id, (err, ode) => {
+          if (err) {
+            return next(err);
+          }
+          let odeOwner = ode.owner.toString();
+          let useridtest = user._id.toString();
+          if (odeOwner !== useridtest) {
+            User.findOneAndUpdate(userId, odeId, (err, success) => {
+              if (err) {
+                return next(err);
+              }
+              console.log(success);
+              response.ok(req, res);
+            });
+          } else {
+            res.status(200).json({ message: 'Its mine' });
+          }
+        });
+      } else {
+        res.status(200).json({ message: 'Already there' });
+      }
+    }
+  });
 });
 
 module.exports = router;
