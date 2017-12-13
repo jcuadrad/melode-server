@@ -15,7 +15,9 @@ const userSchema = new Schema({
   odesCreated: [{
     type: Schema.Types.ObjectId,
     ref: 'Ode'
-  }]
+  }],
+  accessToken: String,
+  refreshToken: String
 }, {
   timestamps: {
     createdAt: 'created_at',

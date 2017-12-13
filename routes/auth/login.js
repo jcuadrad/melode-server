@@ -77,6 +77,7 @@ router.post('/:id/ode', (req, res, next) => {
           if (err) {
             return next(err);
           }
+          spotify.addTrack(user, user.melodePlaylistId, ode.spotify.uri);
           let odeOwner = ode.owner.toString();
           let useridtest = user._id.toString();
           if (odeOwner !== useridtest) {

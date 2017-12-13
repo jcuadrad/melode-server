@@ -32,8 +32,6 @@ function passportConfig () {
         return done(null, user);
       }
 
-      spotify.setAccessToken(accessToken);
-
       const newUser = new User({
         spotifyId: profile.id,
         provider: profile.provider,
@@ -41,10 +39,12 @@ function passportConfig () {
         name: profile.displayName,
         photos: profile.photos,
         emails: profile.emails,
-        melodePlaylistId: ''
+        melodePlaylistId: '',
+        accessToken: accessToken,
+        refreshToken: refreshToken
       });
 
-      spotify.createPlaylist(newUser.spotifyId)
+      spotify.createPlaylist(newUser)
         .then(playlistId => {
           newUser.melodePlaylistId = playlistId;
           newUser.save(err => {

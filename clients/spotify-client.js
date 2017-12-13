@@ -59,13 +59,10 @@ const searchArtist = function (stringSongName) {
     });
 };
 
-const setToken = function (accessToken) {
-  spotifyApi.setAccessToken(accessToken);
-};
-
 const newPlaylist = function (user) {
-  let playlistId = null;
-  return spotifyApi.getUserPlaylists(user)
+  spotifyApi.setAccessToken(user.accessToken);
+  spotifyApi.setRefreshToken(user.refreshToken);
+  return spotifyApi.getUserPlaylists(user.spotifyId)
     .then(function (data) {
       let playlistExists = false;
       for (let ix = 0; ix < data.body.items.length; ix++) {
@@ -74,7 +71,7 @@ const newPlaylist = function (user) {
         }
       }
       if (playlistExists === false) {
-        return spotifyApi.createPlaylist(user, 'Melodes', { 'public': false })
+        return spotifyApi.createPlaylist(user.spotifyId, 'Melodes', { 'public': false })
           .then((data) => {
             return data.body.id;
           }, (err) => {
@@ -86,9 +83,20 @@ const newPlaylist = function (user) {
     });
 };
 
+const addNewTrack = function (user, playlist, song) {
+
+  spotifyApi.setAccessToken(user.accessToken);
+  spotifyApi.setRefreshToken(user.refreshToken);
+  spotifyApi.addTracksToPlaylist(user.spotifyId, playlist, [song])
+    .then((data) => {
+      console.log('Added Track!');
+    })
+    .catch((err) => console.log('Didnt add the track', err));
+};
+
 module.exports = {
   search: search,
   searchArtist: searchArtist,
-  setAccessToken: setToken,
-  createPlaylist: newPlaylist
+  createPlaylist: newPlaylist,
+  addTrack: addNewTrack
 };
