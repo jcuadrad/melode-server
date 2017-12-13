@@ -1,12 +1,13 @@
-var express = require('express');
+const express = require('express');
 const passport = require('passport');
-var router = express.Router();
+const router = express.Router();
 const dotenv = require('dotenv');
-var urlencode = require('urlencode');
+const urlencode = require('urlencode');
 
 const response = require('../../helpers/response');
 const User = require('../../models/User').User;
 const Ode = require('../../models/Ode').Ode;
+const spotify = require('../../clients/spotify-client');
 
 dotenv.config();
 

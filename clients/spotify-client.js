@@ -63,8 +63,9 @@ const setToken = function (accessToken) {
   spotifyApi.setAccessToken(accessToken);
 };
 
-const createPlaylist = function (user) {
-  spotifyApi.getUserPlaylists(user)
+const newPlaylist = function (user) {
+  let playlistId = null;
+  return spotifyApi.getUserPlaylists(user)
     .then(function (data) {
       let playlistExists = false;
       for (let ix = 0; ix < data.body.items.length; ix++) {
@@ -73,9 +74,9 @@ const createPlaylist = function (user) {
         }
       }
       if (playlistExists === false) {
-        spotifyApi.createPlaylist(user, 'Melodes', { 'public': false })
+        return spotifyApi.createPlaylist(user, 'Melodes', { 'public': false })
           .then((data) => {
-            console.log('Created playlist!');
+            return data.body.id;
           }, (err) => {
             console.log('Something went wrong creating!', err);
           });
@@ -89,5 +90,5 @@ module.exports = {
   search: search,
   searchArtist: searchArtist,
   setAccessToken: setToken,
-  createPlaylist: createPlaylist
+  createPlaylist: newPlaylist
 };
