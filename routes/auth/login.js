@@ -14,9 +14,9 @@ router.get('/spotify/start', (req, res) => {
   const baseUrl = 'https://accounts.spotify.com/authorize/';
   const spotifyKey = process.env.SPOTIFY_KEY_ID;
   const redirectUri = urlencode(process.env.SPOTIFY_REDIRECT_URI);
-  const scope = urlencode('user-read-email user-read-private playlist-modify-public playlist-modify-private');
+  const scope = urlencode('user-read-email user-read-private playlist-read-private playlist-modify-public playlist-modify-private');
 
-  const SpotifyUrl = baseUrl + '?client_id=' + spotifyKey + '&redirect_uri=' + redirectUri + '&scope=' + scope + '&response_type=token';
+  const SpotifyUrl = baseUrl + '?client_id=' + spotifyKey + '&redirect_uri=' + redirectUri + '&scope=' + scope + '&show_dialog=true&response_type=token';
 
   res.status(200).json({ url: SpotifyUrl });
 });
@@ -33,7 +33,7 @@ router.get('/spotify/callback', (req, res, next) => {
   // req.login() below makes sure req.user is set to the user
   // 
   // finally, here, we ALWAYS redirect to the frontend APP url
-  passport.authenticate('spotify', (err, user, info) => {
+  passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private', 'playlist-modify-public', 'playlist-modify-private', 'playlist-read-private']}, (err, user, info) => {
     if (err) {
       return next(err);
     }

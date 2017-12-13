@@ -2,6 +2,7 @@ const passport = require('passport');
 const User = require('../models/User').User;
 
 const SpotifyStrategy = require('passport-spotify').Strategy;
+const spotify = require('../clients/spotify-client');
 
 function passportConfig () {
   passport.serializeUser(function (user, done) {
@@ -38,6 +39,9 @@ function passportConfig () {
           photos: profile.photos,
           emails: profile.emails
         });
+
+        spotify.setAccessToken(accessToken);
+        spotify.createPlaylist(profile.id);
 
         newUser.save(err => {
           if (err) {

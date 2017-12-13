@@ -1,5 +1,8 @@
 const SpotifyApi = require('node-spotify-api');
 const dotenv = require('dotenv');
+var SpotifyWebApi = require('spotify-web-api-node');
+
+// credentials are optional
 
 dotenv.config();
 
@@ -22,6 +25,7 @@ const formatResult = function (result) {
 };
 
 // New Spotify Instance with Keys
+const spotifyApi = new SpotifyWebApi(spotifyKeys);
 const spotify = new SpotifyApi(spotifyKeys);
 
 const search = function (stringArtist, stringSongName) {
@@ -55,7 +59,35 @@ const searchArtist = function (stringSongName) {
     });
 };
 
+const setToken = function (accessToken) {
+  spotifyApi.setAccessToken(accessToken);
+};
+
+const createPlaylist = function (user) {
+  spotifyApi.getUserPlaylists(user)
+    .then(function (data) {
+      let playlistExists = false;
+      for (let ix = 0; ix < data.body.items.length; ix++) {
+        if (data.body.items[ix].name === 'Melodes') {
+          playlistExists = true;
+        }
+      }
+      if (playlistExists === false) {
+        spotifyApi.createPlaylist(user, 'Melodes', { 'public': false })
+          .then((data) => {
+            console.log('Created playlist!');
+          }, (err) => {
+            console.log('Something went wrong creating!', err);
+          });
+      }
+    }).catch(function (err) {
+      console.log('Something went wrong getting playlists!', err);
+    });
+};
+
 module.exports = {
   search: search,
-  searchArtist: searchArtist
+  searchArtist: searchArtist,
+  setAccessToken: setToken,
+  createPlaylist: createPlaylist
 };
