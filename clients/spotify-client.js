@@ -10,6 +10,17 @@ const spotifyKeys = {
   redirectUri: process.env.SPOTIFY_REDIRECT_URI
 };
 
+const formatResult = function (result) {
+  const data = {
+    name: result.name,
+    image: result.album.images[1].url,
+    preview: result.preview_url,
+    artist: result.artists[0].name,
+    uri: result.uri
+  };
+  return data;
+};
+
 // New Spotify Instance with Keys
 const spotify = new SpotifyApi(spotifyKeys);
 
@@ -19,18 +30,7 @@ const search = function (stringArtist, stringSongName) {
     .then(function (spotRes) {
       console.log('Going to Spotify');
       if (spotRes.tracks.items.length !== 0) {
-        const name = spotRes.tracks.items[0].name;
-        const preview = spotRes.tracks.items[0].preview_url;
-        const image = spotRes.tracks.items[0].album.images[1].url;
-        const artistName = spotRes.tracks.items[0].artists[0].name;
-        const uri = spotRes.tracks.items[0].uri;
-        const data = {
-          name: name,
-          image: image,
-          preview: preview,
-          artist: artistName,
-          uri: uri
-        };
+        const data = formatResult(spotRes.tracks.items[0]);
         console.log('SPOTIFY RESULT:', data);
         return data;
       } else {
@@ -45,6 +45,17 @@ const search = function (stringArtist, stringSongName) {
     }); // @todo handle this properly
 };
 
+const searchArtist = function (stringSongName) {
+  return spotify.search({ type: 'track', query: `track:${stringSongName}`, limit: 10 })
+    .then((spotRes) => {
+      return spotRes.tracks.items.map(formatResult);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 module.exports = {
-  search
+  search: search,
+  searchArtist: searchArtist
 };

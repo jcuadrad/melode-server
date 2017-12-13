@@ -107,8 +107,14 @@ router.get('/:id', function (req, res, next) {
   });
 });
 
-router.post('/by-id', function (req, res, next) {
-  res.send('the users odes');
+router.post('/autocomplete', function (req, res, next) {
+  const search = req.body.artist;
+
+  spotify.searchArtist(search)
+    .then(result => {
+      res.status(200).json(result);
+    })
+    .catch(err => next(err));
 });
 
 module.exports = router;
