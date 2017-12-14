@@ -56,7 +56,7 @@ router.post('/', function(req, res, next) {
       // Save new Ode
       newOde.save(error => {
         if (error) {
-          console.log('Fucked Up Saving!');
+          res.status(500).json('Fucked Up Saving!');
         } else {
           res.status(200).json({ status: 'Saved' });
         }

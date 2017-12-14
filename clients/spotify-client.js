@@ -32,21 +32,14 @@ const search = function (stringArtist, stringSongName) {
   // Spotify Search
   return spotify.search({ type: 'track', query: `artist:${stringArtist} track:${stringSongName}`, limit: 1 })
     .then(function (spotRes) {
-      console.log('Going to Spotify');
       if (spotRes.tracks.items.length !== 0) {
         const data = formatResult(spotRes.tracks.items[0]);
-        console.log('SPOTIFY RESULT:', data);
         return data;
-      } else {
-        // const dataEmpty = {};
-        console.log('Nothing in Spotify');
-        // return dataEmpty;
-      }
-    }
-    )
+      };
+    })
     .catch((err) => {
-      console.log(err);
-    }); // @todo handle this properly
+      return err;
+    });
 };
 
 const searchArtist = function (stringSongName) {
@@ -55,7 +48,7 @@ const searchArtist = function (stringSongName) {
       return spotRes.tracks.items.map(formatResult);
     })
     .catch((err) => {
-      console.log(err);
+      return err;
     });
 };
 
@@ -74,13 +67,9 @@ const newPlaylist = function (user) {
         return spotifyApi.createPlaylist(user.spotifyId, 'Melodes', { 'public': false })
           .then((data) => {
             return data.body.id;
-          }, (err) => {
-            console.log('Something went wrong creating!', err);
-          });
+          }, (err) => err);
       }
-    }).catch(function (err) {
-      console.log('Something went wrong getting playlists!', err);
-    });
+    }).catch((err) => err);
 };
 
 const addNewTrack = function (user, playlist, song) {
@@ -89,9 +78,9 @@ const addNewTrack = function (user, playlist, song) {
   spotifyApi.setRefreshToken(user.refreshToken);
   spotifyApi.addTracksToPlaylist(user.spotifyId, playlist, [song])
     .then((data) => {
-      console.log('Added Track!');
+      return data;
     })
-    .catch((err) => console.log('Didnt add the track', err));
+    .catch((err) => err);
 };
 
 module.exports = {

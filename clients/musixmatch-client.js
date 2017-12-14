@@ -18,17 +18,12 @@ function search (stringArtist, stringSongName) {
           lyrics: lyrics,
           fullLink: fullLink
         };
-        console.log('MUSIXMATCH RESULT:', data);
         return data;
-      } else {
-        // const dataEmpty = {};
-        console.log('Nothing in Musixmatch!');
-        // return dataEmpty;
       }
     })
     .catch((err) => {
-      console.log(err);
-    }); // @todo handle this properly
+      return err;
+    });
 }
 
 module.exports = {

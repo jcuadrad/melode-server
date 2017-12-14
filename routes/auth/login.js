@@ -85,7 +85,6 @@ router.post('/:id/ode', (req, res, next) => {
               if (err) {
                 return next(err);
               }
-              console.log(success);
               response.ok(req, res);
             });
           } else {

@@ -51,7 +51,6 @@ function passportConfig () {
             if (err) {
               return done(err);
             }
-            console.log(newUser);
             done(null, newUser);
           });
         });

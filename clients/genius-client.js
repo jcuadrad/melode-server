@@ -18,14 +18,9 @@ function search (geniusQuery) {
           const data = {
             annotation: annotation
           };
-          console.log('GENIUS RESULT:', data);
           return data;
         });
-      } else {
-        // const dataEmpty = {};
-        console.log('Nothing in Genius!');
-        // return dataEmpty;
-      }
+      };
     }
     );
 }

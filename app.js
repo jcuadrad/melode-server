@@ -11,7 +11,6 @@ const MongoStore = require('connect-mongo')(session);
 const passportConfiguration = require('./helpers/passportConfig');
 
 const ode = require('./routes/ode');
-const user = require('./routes/user');
 const auth = require('./routes/auth/login');
 
 const dotenv = require('dotenv');
@@ -59,7 +58,6 @@ app.use(cookieParser());
 
 app.use('/ode', ode);
 app.use('/auth', auth);
-app.use('/user', user);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
