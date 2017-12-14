@@ -3,9 +3,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-// Import Helper Functions
-const helperFunction = require('../helpers/functions');
-
 // New Genius Instance with Keys
 const genius = new GeniusApi(process.env.GENIUS_CLIENT_ACCESS_TOKEN);
 
@@ -16,8 +13,8 @@ function search (geniusQuery) {
       if (geniusSearchRes.hits.length !== 0) {
         let geniusSongId = geniusSearchRes.hits[0].result.id;
         // Genius Get Annotation
-        return genius.song(geniusSongId).then((geniusRes) => {
-          const annotation = helperFunction.getAnnotation(geniusRes.song.description.dom.children[0].children);
+        return genius.song(geniusSongId, {text_format: 'plain'}).then((geniusRes) => {
+          const annotation = geniusRes.song.description.plain;
           const data = {
             annotation: annotation
           };
